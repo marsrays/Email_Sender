@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ applicationName }}</title>
+</head>
+
+<body style="margin: 0;padding: 0;">
+<table align="center" width="100%" height="100%" bgcolor=#f5f5f5 style="padding: 0 0 50px 0">
+    <tr>
+        <td>
+            <table style="max-width: 630px;" align="center" width="70%">
+                <tr>
+                    <td style="text-align: center;">
+                        <img src="" style="display: block;margin: 80px auto 20px;width: 110px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="background-color: #fff; border-radius: 5px;text-align: center;font-family: 'Microsoft YaHei', 'Microsoft JhengHei', 'PingFangTC', Helvetica;padding-top: 35px;padding-bottom: 35px;padding-left: 90px;padding-right: 90px; color: #000">
+                            <h2 style="font-weight: normal; font-size: 18px; ">Hi
+                                {{#if userName}} {{ userName }}{{/if}},</h2>
+                            <p style="font-weight: 100; font-size: 16px; line-height: 23px">
+                                We re-calculated the game of {{ gameId }} on draw "{{ drawIdString }}", and below is the list of affected players.
+                            </p>
+                            <table style="width: 100%; border: 1px solid #333;">
+                                <thead style="background-color: #333; color: #fff;">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Valid Bet</th>
+                                        <th>Before Win</th>
+                                        <th>After Win</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each txn}}
+                                    <tr>
+                                        <td>{{this.accountName}}</td>
+                                        <td>{{this.validBet}}</td>
+                                        <td>{{this.beforePrizeWon}}</td>
+                                        <td>{{this.afterPrizeWon}}</td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-family: 'Microsoft YaHei', 'Microsoft JhengHei', 'PingFangTC', Helvetica;text-align: center;font-size: 12px;color: #777;line-height: 22px;padding-top: 15px;">
+                        <div style="color: #000;">Copyright © {{ applicationName }} Reserved</div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
