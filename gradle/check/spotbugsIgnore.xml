@@ -1,0 +1,7 @@
+<FindBugsFilter>
+    <!--refer to https://spotbugs.readthedocs.io/en/latest/bugDescriptions.html-->
+    <!--OBL_UNSATISFIED_OBLIGATION: Method may fail to clean up stream or resource (spotbugs bug: https://github.com/spotbugs/spotbugs/issues/432)-->
+    <Match>
+        <Source name="~.*/test/.*"/>
+    </Match>
+</FindBugsFilter>

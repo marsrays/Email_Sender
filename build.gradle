@@ -6,6 +6,23 @@
  * User Manual available at https://docs.gradle.org/5.4.1/userguide/tutorial_java_projects.html
  */
 
+//buildscript {
+//    dependencies {
+//        classpath("gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:2.0.0")
+//    }
+//}
+
+//buildscript {
+//    repositories {
+//        maven {
+//            url "https://plugins.gradle.org/m2/"
+//        }
+//    }
+//    dependencies {
+//        classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:2.6.0"
+//    }
+//}
+
 plugins {
     id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
@@ -15,7 +32,50 @@ plugins {
 
     // Apply the application plugin to add support for building an application
     id 'application'
+
+//    id 'pmd'
+//    id "com.github.spotbugs" version "2.0.0"
+//    id 'checkstyle'
+//    id 'com.google.cloud.tools.jib' version '2.6.0'
 }
+
+//apply plugin: "com.google.cloud.tools.jib"
+//jib.to {
+//    image = ''
+//}
+
+//apply plugin: 'pmd'
+//pmd {
+//    consoleOutput = true
+//    toolVersion = "6.26.0"
+//    rulePriority = 5
+//    ruleSets = []
+//    ruleSetFiles = rootProject.files('gradle/check/pmd.xml')
+//}
+
+
+
+//apply plugin: 'com.github.spotbugs'
+//spotbugs {
+//    reportLevel = 'low'
+//    includeFilter = rootProject.file('gradle/check/spotbugs.xml')
+//    excludeFilter = rootProject.file('gradle/check/spotbugsIgnore.xml')
+//    toolVersion = '4.0.6'
+//}
+
+//tasks.withType(com.github.spotbugs.SpotBugsTask).configureEach {
+//    reports {
+//        xml.enabled = false
+//        html.enabled = true
+//    }
+//}
+
+//apply plugin: 'checkstyle'
+//checkstyle {
+//    toolVersion = '8.22'
+//    configFile = rootProject.file('gradle/check/checkstyle.xml')
+//}
+
 
 repositories {
     mavenCentral()
@@ -33,6 +93,8 @@ configurations {
 }
 
 dependencies {
+
+//    implementation "org.yaml:snakeyaml:1.27"
 
     /**
      *  spring boot libs

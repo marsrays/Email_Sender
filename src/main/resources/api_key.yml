@@ -1,1 +1,3 @@
-sendGridApiKey: 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
+sendGridApiKey: SG.YOUR.KEY
+mailGunUserName: YOUR_DOMAIN.com
+mailGunApiKey: GM.YOUR.KEY

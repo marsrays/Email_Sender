@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +17,16 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.http.HttpStatus;
+import org.rapidoid.u.U;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import org.slf4j.Logger;
@@ -26,6 +34,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
@@ -48,13 +59,18 @@ public class SendMailService {
     /**
      * 收件人郵箱地址
      */
-    private static final String TO = "ABC@hotmail.com";
+    private static final String TO = "ray.liu@nexiosoft.com";
     private static final String TO2 = "DEF@gmail.com";
 
     /**
      * 寄件人郵箱地址
      */
     private static final String FROM = "TEST<noreply@email.com>";
+
+    @Value("${mailGunApiKey}")
+    private String mailGunApiKey;
+    @Value("${mailGunUserName}")
+    private String mailGunUserName;
 
     @Autowired
     private SendGrid sendGrid;
@@ -70,6 +86,9 @@ public class SendMailService {
 
     @Autowired
     private PebbleTemplate activateTemplate;
+
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final Base64.Encoder encoder = Base64.getEncoder();
 
     /**
      * 利用 SendGrid 提供的 JAVA 框架寄信
@@ -115,6 +134,35 @@ public class SendMailService {
             // 利用 JavaMailSender 發送 Email
             emailSender.send(message);
             LOGGER.info("Sent message successfully....");
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 利用 SendGrid 提供的 JAVA 框架寄信
+     * @param templateType 信件模板
+     */
+    public void sendHTMLEmailByMailGun(TemplateType templateType) {
+        try {
+            MultiValueMap<String, String> headerMap = new LinkedMultiValueMap<>();
+            String auth = "api:" + mailGunApiKey;
+            headerMap.add("Authorization", "Basic " + encoder.encodeToString(auth.getBytes(StandardCharsets.UTF_8)));
+            MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+            map.add("from", FROM);
+            map.add("to", TO);
+            map.add("subject", templateType.getTitle());
+            map.add("html", getHtmlByHandlebars(templateType)
+            );
+            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headerMap);
+
+            ResponseEntity<String> response = restTemplate.postForEntity("https://api.mailgun.net/v3/" + mailGunUserName + "/messages", request, String.class);
+
+            if (U.isEmpty(response) || response.getStatusCodeValue() != HttpStatus.SC_OK) {
+                String msg = U.isEmpty(response) ? "response empty" : response.getBody();
+                LOGGER.error("send email by Mailgun failed, error msg {}", msg);
+            }
+
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }

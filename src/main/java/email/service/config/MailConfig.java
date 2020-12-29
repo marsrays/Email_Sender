@@ -15,24 +15,33 @@ import com.sendgrid.SendGrid;
 public class MailConfig {
 
     @Value("${sendGridApiKey}")
-    private String apiKey;
+    private String sendGridApiKey;
+    private final String MAIL_GUN_SMTP_PW = "";
 
     @Bean
     public SendGrid getSendGridSender() {
-        return new SendGrid(apiKey);    // "SENDGRID_API_KEY"
+        return new SendGrid(sendGridApiKey);    // "SENDGRID_API_KEY"
     }
 
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-//        mailSender.setHost("smtp.gmail.com");
-        mailSender.setHost("smtp.sendgrid.net");
-        mailSender.setPort(587);
 
+        // Send By Gmail SMTP
+//        mailSender.setHost("smtp.gmail.com");
 //        mailSender.setUsername("xxx.xxx@gmail.com");
 //        mailSender.setPassword("password");
-        mailSender.setUsername("apikey");   // "SENDGRID_USER_NAME" or "apikey"
-        mailSender.setPassword(apiKey);     // "SENDGRID_PASSWORD" or "KEY"
+
+        // Send By SendGrid SMTP
+//        mailSender.setHost("smtp.sendgrid.net");
+//        mailSender.setUsername("apikey");           // "SENDGRID_USER_NAME" or "apikey"
+//        mailSender.setPassword(sendGridApiKey);     // "SENDGRID_PASSWORD" or "KEY"
+
+        // Send By MailGun SMTP
+        mailSender.setHost("smtp.mailgun.org");
+        mailSender.setUsername("postmaster@XXX");   // "postmaster@MAILGUN_DOMAIN_NAME"
+        mailSender.setPassword(MAIL_GUN_SMTP_PW);      // "MAILGUN_SMTP_PASSWORD"
+        mailSender.setPort(587);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

@@ -23,7 +23,7 @@ public class MethodInterceptor {
      * AOP
      */
     @Pointcut("execution(public * email.service..*.*(..)) || execution(public * email.service.controller..*.*(..))")
-    public void methodPoint(){}
+    public void methodPoint() {}
 
     @Around("methodPoint()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {

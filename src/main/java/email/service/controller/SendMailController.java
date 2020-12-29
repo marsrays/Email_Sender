@@ -1,7 +1,5 @@
 package email.service.controller;
 
-import javax.websocket.server.PathParam;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +32,12 @@ public class SendMailController {
     public void sendJavaMail(@PathVariable("template") TemplateType templateType) {
         sendMailService.sendHTMLEmailByJavaMail(templateType);
         LOGGER.info("send email by JavaMail!");
+    }
+
+    @PutMapping("send/mailGun/{template}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void sendMailGun(@PathVariable("template") TemplateType templateType) {
+        sendMailService.sendHTMLEmailByMailGun(templateType);
+        LOGGER.info("send email by MailGun!");
     }
 }
